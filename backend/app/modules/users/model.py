@@ -1,25 +1,33 @@
-from sqlalchemy import Boolean
-from sqlalchemy import String
+from typing import TYPE_CHECKING
 
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
+from sqlalchemy import Boolean, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import BaseModel
+from app.db.base_model import BaseModel
+
+if TYPE_CHECKING:
+    from app.modules.audit.model import AuditLog
+    from app.modules.roles.model import Role
 
 
 class User(BaseModel):
+    """
+    User model for authentication and authorization.
+    """
 
     __tablename__ = "users"
 
     username: Mapped[str] = mapped_column(
         String(50),
         unique=True,
+        index=True,
         nullable=False,
     )
 
     email: Mapped[str] = mapped_column(
         String(255),
         unique=True,
+        index=True,
         nullable=False,
     )
 
@@ -28,12 +36,24 @@ class User(BaseModel):
         nullable=False,
     )
 
-    role: Mapped[str] = mapped_column(
-        String(20),
-        default="viewer",
-    )
-
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         default=True,
+        nullable=False,
     )
+
+    role_id = mapped_column(
+        ForeignKey("roles.id"),
+        nullable=False,
+    )
+
+    role: Mapped["Role"] = relationship(
+        back_populates="users",
+    )
+
+    audit_logs: Mapped[list["AuditLog"]] = relationship(
+        back_populates="user",
+    )
+
+    def __repr__(self) -> str:
+        return f"<User(username='{self.username}')>"
