@@ -1,28 +1,19 @@
-from pydantic import BaseModel
-from pydantic import EmailStr
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class UserCreate(BaseModel):
-
     username: str
-
     email: EmailStr
-
     password: str
 
 
-class UserResponse(BaseModel):
+class UserRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
 
-    id: str
-
+    id: UUID
     username: str
-
     email: EmailStr
-
     role: str
-
     is_active: bool
-
-    model_config = {
-        "from_attributes": True
-    }
