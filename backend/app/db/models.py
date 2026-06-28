@@ -1,35 +1,21 @@
-from datetime import datetime
-from uuid import UUID, uuid4
+from app.modules.agents.model import Agent
+from app.modules.audit.model import AuditLog
+from app.modules.roles.model import Role
+from app.modules.users.model import User
+from app.modules.telemetry.system_snapshot import SystemSnapshot
+from app.modules.telemetry.telemetry_session import TelemetrySession
+from app.modules.telemetry.process_event import ProcessEvent
+from app.modules.telemetry.network_event import NetworkEvent
+from app.modules.telemetry.alert_event import AlertEvent
 
-from sqlalchemy import DateTime
-from sqlalchemy import func
-from sqlalchemy.dialects.postgresql import UUID as PGUUID
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-class BaseModel(Base):
-
-    __abstract__ = True
-
-    id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-    )
-
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-    )
+__all__ = [
+    "User",
+    "Role",
+    "AuditLog",
+    "Agent",
+    "TelemetrySession",
+    "ProcessEvent",
+    "NetworkEvent",
+    "AlertEvent",
+    "SystemSnapshot",
+]

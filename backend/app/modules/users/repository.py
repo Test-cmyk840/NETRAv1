@@ -1,46 +1,58 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
-from app.common.base_repository import BaseRepository
-
-from .model import User
+from app.modules.users.model import User
 
 
-class UserRepository(
-    BaseRepository[User]
-):
+class UserRepository:
 
-    def __init__(
-        self,
-        session: AsyncSession,
-    ):
-        super().__init__(
-            session,
-            User,
+    @staticmethod
+    async def get_by_username(
+        db: AsyncSession,
+        username: str,
+    ) -> User | None:
+
+        result = await db.execute(
+            select(User)
+            .options(
+                selectinload(User.role)
+            )
+            .where(
+                User.username == username
+            )
         )
 
-    async def get_by_email(
-        self,
-        email: str,
-    ):
+        return result.scalar_one_or_none()
 
-        result = await self.session.execute(
-            select(User).where(
+    @staticmethod
+    async def get_by_email(
+        db: AsyncSession,
+        email: str,
+    ) -> User | None:
+
+        result = await db.execute(
+            select(User)
+            .options(
+                selectinload(User.role)
+            )
+            .where(
                 User.email == email
             )
         )
 
         return result.scalar_one_or_none()
 
-    async def get_by_username(
-        self,
-        username: str,
-    ):
+    @staticmethod
+    async def create(
+        db: AsyncSession,
+        user: User,
+    ) -> User:
 
-        result = await self.session.execute(
-            select(User).where(
-                User.username == username
-            )
-        )
+        db.add(user)
 
-        return result.scalar_one_or_none()
+        await db.commit()
+
+        await db.refresh(user)
+
+        return user

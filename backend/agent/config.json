@@ -1,0 +1,6 @@
+{
+    "server": "http://127.0.0.1:8000/api/v1",
+    "admin_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlYjE2OTdiZC02YzRmLTQ3NmItYTNkOS02ZjY0YjA4NTk3NzQiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzgyNTMzMDcxfQ.hcujUtdXMTI94FeBDmmWt4yYIO0RWfzfkeUI14JHTMk",
+    "agent_token": "b472c38a-1ddb-4525-9e54-04428393b605",
+    "heartbeat_interval": 30
+}
